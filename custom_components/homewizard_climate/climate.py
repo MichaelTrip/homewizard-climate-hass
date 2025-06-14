@@ -85,7 +85,6 @@ class HomeWizardClimateEntity(ClimateEntity):
             self._isAIRCOOLER = True
         
         # see, https://developers.home-assistant.io/blog/2024/01/24/climate-climateentityfeatures-expanded
-        self._enable_turn_on_off_backwards_compatibility = False
 
     @property
     def device_info(self) -> DeviceInfo:
