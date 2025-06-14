@@ -5,9 +5,18 @@ import time
 from homewizard_climate_ws.model.climate_device_state import (
     HomeWizardClimateDeviceState,
 )
+
 from homewizard_climate_ws.model.climate_device import (
     HomeWizardClimateDeviceType,
 )
+
+# Monkey-patch AIRCOOLER into HomeWizardClimateDeviceType if missing
+if not hasattr(HomeWizardClimateDeviceType, "AIRCOOLER"):
+    try:
+        HomeWizardClimateDeviceType.AIRCOOLER = HomeWizardClimateDeviceType("aircooler")
+    except ValueError:
+        # If the enum does not accept new values, fallback to a string
+        HomeWizardClimateDeviceType.AIRCOOLER = "aircooler"
 
 from homewizard_climate_ws.ws.hw_websocket import HomeWizardClimateWebSocket
 
@@ -72,9 +81,8 @@ class HomeWizardClimateEntity(ClimateEntity):
             self._isHEATER = True
         if self._device_web_socket.device.type == HomeWizardClimateDeviceType.DEHUMIDIFIER:
             self._isDEHUMID = True
-#       doesn't seem to work with ["homewizard-climate-ws==0.0.26"],.
-       if self._device_web_socket.device.type == HomeWizardClimateDeviceType.aircooler:
-           self._isAIRCOOLER = True
+        if self._device_web_socket.device.type == HomeWizardClimateDeviceType.AIRCOOLER:
+            self._isAIRCOOLER = True
         
         # see, https://developers.home-assistant.io/blog/2024/01/24/climate-climateentityfeatures-expanded
         self._enable_turn_on_off_backwards_compatibility = False
